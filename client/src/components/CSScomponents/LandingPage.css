@@ -1,0 +1,24 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ajusta la altura al 100% de la ventana */
+    background-image: url('https://images.wallpaperscraft.com/image/single/puppies_dogs_many_44645_1920x1080.jpg'); /* Reemplaza 'ruta/de/la/imagen.jpg' con la ruta real de tu imagen */
+    background-size: cover; /* Ajusta la imagen para cubrir todo el fondo */
+    background-position: center; /* Centra la imagen de fondo */
+    margin: 0; /* Elimina el margen predeterminado del cuerpo */
+    padding: 0; /* Elimina el relleno predeterminado del cuerpo */
+}
+
+.button-container {
+    margin-top: 800px; /* Coloca el contenedor de botón en la parte inferior */
+    margin-bottom: 50px; /* Espacio entre el botón y el borde inferior de la página */
+    font-size: 1.6em; /* Ajusta el tamaño de la fuente del botón */
+    padding: 15px 30px; /* Ajusta el tamaño del botón */
+}
+

@@ -1,0 +1,19 @@
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh; /* Ajusta la altura si es necesario */
+}
+
+
+.sbinput {
+    width: 280px; /* Ajusta el ancho del input */
+    height: 30px; /* Ajusta la altura del input */
+    font-size: 16px; /* Ajusta el tamaño del texto */
+}
+
+.sbbot {
+    /* Estilos adicionales para el botón de la barra de búsqueda */
+    height: 50px; /* Ajusta la altura del botón */
+    font-size: 16px; /* Ajusta el tamaño del texto del botón */
+}

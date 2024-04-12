@@ -1,0 +1,5 @@
+.card-image {
+    width: 200px; /* Ancho deseado para las imágenes */
+    height: 200px; /* Altura deseada para las imágenes */
+    object-fit: cover; /* Ajusta la imagen para cubrir todo el contenedor manteniendo su relación de aspecto */
+}

@@ -1,0 +1,18 @@
+.dog-detail {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos verticalmente */
+    justify-content: center; /* Centra verticalmente el contenido */
+    align-items: center; /* Centra horizontalmente el contenido */
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+  }
+  
+  .dog-detail img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .dog-detail button {
+    margin-top: 20px; /* Espacio superior para separar el botón de la imagen */
+  }
