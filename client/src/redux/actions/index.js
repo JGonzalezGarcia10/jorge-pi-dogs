@@ -1,4 +1,4 @@
-import { GET_DOGS, FILTER_BY_TEMPERAMENTS, POST_DOG, GET_ALL_TEMPERAMENTS, SEARCH_DOGS_BY_NAME, GET_DOG_BY_ID, FILTER_BY_ORIGIN} from './types';
+import { GET_DOGS, FILTER_BY_TEMPERAMENTS, POST_DOG, GET_ALL_TEMPERAMENTS, SEARCH_DOGS_BY_NAME, GET_DOG_BY_ID, FILTER_ORIGIN} from './types';
 import axios from 'axios';
 import { getDogsById, postDog } from '../../Utils/apiFunctions';
 
@@ -43,6 +43,7 @@ export const getAllTemperaments = () => {
 };
 
 
+
 export const filterByTemperaments = (temperament) => {
     return {
         type: FILTER_BY_TEMPERAMENTS,
@@ -54,7 +55,7 @@ export const filterByTemperaments = (temperament) => {
 
 export const filterByOrigin = (origin) => {
     return {
-        type: FILTER_BY_ORIGIN,
+        type: FILTER_ORIGIN,
         payload: origin,
 
         
@@ -99,4 +100,17 @@ export const setDogById = (id) => {
             console.log('server error!');
         }
     };
+};
+
+export const sortDogs = (order) => {
+    return {
+    type: "SORT_DOGS",
+    payload: order,
+    }
+};
+export const sortByWeight = (orderWeight) => {
+    return {
+    type: "SORT_BY_WEIGHT",
+    payload: orderWeight,
+    }
 };

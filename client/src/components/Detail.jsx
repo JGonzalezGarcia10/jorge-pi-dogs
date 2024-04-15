@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import './CSScomponents/Detail.css';
+import { useDispatch, useSelector } from 'react-redux';
+import {  getAllTemperaments } from '../redux/actions/index';
+import getDogs from '../redux/actions/index';
 
 const Detail = () => {
     const { id } = useParams();
     const [dog, setDog] = useState(null);
-    const [imageUrl, setImageUrl] = useState('');
+    const dispatch = useDispatch();
+    const { dogs } = useSelector(state => state.dogs);
+
+    useEffect(() => {
+        dispatch(getDogs());
+        dispatch(getAllTemperaments());
+    }, [dispatch]);
 
     useEffect(() => {
         const fetchDog = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/dogs/${id}`);
-                const data = response.data;
-                setDog(data);
-                if (data.reference_image_id) {
-                    fetchImage(data.reference_image_id);
+                // Buscar el perro por ID en el array de perros almacenados en el estado global
+                const selectedDog = dogs.find(dog => dog.id == id);
+                if (selectedDog) {
+                    setDog(selectedDog);
+                } else {
+                    // Si no se encuentra el perro con el ID especificado
+                    console.error('No se encontró el perro con el ID especificado');
                 }
             } catch (error) {
                 console.error('Error fetching dog:', error);
@@ -23,17 +33,7 @@ const Detail = () => {
         };
 
         fetchDog();
-    }, [id]);
-
-    const fetchImage = async (referenceImageId) => {
-        try {
-            const response = await fetch(`https://api.thedogapi.com/v1/images/${referenceImageId}`);
-            const data = await response.json();
-            setImageUrl(data.url);
-        } catch (error) {
-            console.error('Error fetching image:', error);
-        }
-    };
+    }, [dogs, id]);
 
     if (!dog) {
         return <div>Loading...</div>;
@@ -42,11 +42,11 @@ const Detail = () => {
     return (
         <div className="dog-detail">
             <h2>{dog.name}</h2>
-            {imageUrl && <img src={imageUrl} alt={dog.name} />}
+            <img className="card-image" src={dog.image ? dog.image : `https://cdn2.thedogapi.com/images/${dog.reference_image_id}.jpg`} alt={dog.name} />
             <p>ID: {dog.id}</p>
-            <p>Height: {dog.height.metric} cm</p>
-            <p>Weight: {dog.weight.metric} Kg</p>
-            <p>Temperaments: {dog.temperament}</p>
+            <p>Weight: {dog.weight.metric ? dog.weight.metric : dog.weight}kg</p>
+            <p>Height: {dog.height.metric ? dog.height.metric : dog.height}m</p>
+            <p>Temperaments: {Array.isArray(dog.Temperaments) ? dog.Temperaments.map(temp => temp.name).join(', ') : dog.temperament}</p>
             <p>Life span: {dog.life_span}</p>
             <Link to="/home">
                 <button>Regresar a la página de inicio</button>

@@ -40,7 +40,7 @@ export default function Form() {
 
   useEffect(() => {
     if(height.heightMin !== "" && height.heightMax !== ""){
-      const newheight = `${height.heightMin} - ${height.heightMax} m`
+      const newheight = `${height.heightMin} - ${height.heightMax}`
       setValor({
         ...valor,
         height: newheight
@@ -55,7 +55,7 @@ export default function Form() {
 
   useEffect(() => {
     if (weight.weightMin !== "" && weight.weightMax !== "") {
-      const newweight = `${weight.weightMin} - ${weight.weightMax} kg`;
+      const newweight = `${weight.weightMin} - ${weight.weightMax}`;
       setValor({
         ...valor,
         weight: newweight
@@ -70,7 +70,7 @@ export default function Form() {
 
   useEffect(() => {
     if (life_span.life_spanMin !== "" && life_span.life_spanMax !== "") {
-      const newlife_span = `${life_span.life_spanMin} - ${life_span.life_spanMax} años`;
+      const newlife_span = `${life_span.life_spanMin} - ${life_span.life_spanMax} years`;
       setValor({
         ...valor,
         life_span: newlife_span
@@ -81,7 +81,7 @@ export default function Form() {
   useEffect(() =>{
     setValor({
       ...valor,
-      temperamentss: temperamentsSeleccionados,
+      temperaments: temperamentsSeleccionados,
     })
   },[temperamentsSeleccionados])
 
@@ -128,14 +128,14 @@ export default function Form() {
           <input className='inputLargo' id="name" name="name" type="text" placeholder='Maax'onChange={handleChange}/>
         </div>
         <div className='FormInput'>
-          <label htmlFor="image.url">Image(url): </label>
-          <input className='inputLargo' type="text" name="image.url" id="image.url" placeholder='https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngwing.com%2Fes%2Fsearch%3Fq%3Dperro%2Bgrande&psig=AOvVaw2OtuLj0NDHtgUTOIScNPs6&ust=1709128558072000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIDf3JbWy4QDFQAAAAAdAAAAABAb...' onChange={handleChange}/>
+          <label htmlFor="image">Image(url): </label>
+          <input className='inputLargo' type="text" name="image" id="image" placeholder='https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngwing.com%2Fes%2Fsearch%3Fq%3Dperro%2Bgrande&psig=AOvVaw2OtuLj0NDHtgUTOIScNPs6&ust=1709128558072000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIDf3JbWy4QDFQAAAAAdAAAAABAb...' onChange={handleChange}/>
         </div>
         <div className='FormInput'>
-          <label htmlFor="heighMin">Altura: </label>
+          <label htmlFor="heighMin">height: </label>
           <div className='contenedorInputChico'>
-            <input className="inputChico" type="number" name="alturaMin" id="alturaMin" placeholder='Min' onChange={(e) => handleChangeMinMax(e, setHeight)}/>
-            <input className="inputChico" type="number" name="alturaMax" id="alturaMax" placeholder='Max'onChange={(e) => handleChangeMinMax(e, setHeight)}/>
+            <input className="inputChico" type="number" name="heightMin" id="heightaMin" placeholder='Min' onChange={(e) => handleChangeMinMax(e, setHeight)}/>
+            <input className="inputChico" type="number" name="heightMax" id="heightMax" placeholder='Max'onChange={(e) => handleChangeMinMax(e, setHeight)}/>
           </div>
         </div>
         <div className='FormInput'>
@@ -153,8 +153,8 @@ export default function Form() {
           </div>
         </div>
         <div className='FormInput'>
-          <label htmlFor="temperamentss">temperamentss: </label>
-          <select className="FormSelect" name="temperamentss" id="temperamentss" onChange={handleSelectChange}>
+          <label htmlFor="temperaments">temperaments: </label>
+          <select className="FormSelect" name="temperaments" id="temperaments" onChange={handleSelectChange}>
             <option key="default" value="default">-</option>
             {allTemperaments.map((temp, index) => (
               <option key={index} value={temp}>{temp}</option>

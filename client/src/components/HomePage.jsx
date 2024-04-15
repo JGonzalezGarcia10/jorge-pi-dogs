@@ -1,4 +1,4 @@
-import getDogs, { filterByOrigin, filterByTemperaments, getAllTemperaments } from '../redux/actions/index';
+import getDogs, { filterByOrigin, filterByTemperaments, getAllTemperaments, sortDogs, sortByWeight } from '../redux/actions/index';
 import Cards from './Cards';
 import React, {  useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +16,8 @@ const Alltemperaments = useSelector(state => state.dogs.allTemperaments)
 const [temperament, setTemperament] = useState('');
 const toShow = filteredResults.length > 0 ? filteredResults : searchResults.length > 0 ? searchResults : dogs
 const [origin, setOrigin] = useState('');
+const [order, setOrder] = useState('');
+const [orderWeight, setOrderWeight] = useState('');
 
 const [filteredTemperaments, setFilteredTemperaments] = useState([]);
 
@@ -38,7 +40,6 @@ useEffect(() => {
     const handleTempFilter = (e) => {
         const selectedValue = e.target.value;
         dispatch(filterByTemperaments(selectedValue));
-        console.log(selectedValue);
         setTemperament(selectedValue);
         
     };
@@ -46,9 +47,25 @@ useEffect(() => {
     const handleOriginFilter = (e) => {
         const originValue = e.target.value
         dispatch(filterByOrigin(originValue));
+        console.log(originValue);
         setOrigin(originValue)
-      };
+    };
 
+    const handleResetFilters = () => {
+        dispatch(filterByTemperaments('All'));
+        dispatch(filterByOrigin('All'));
+        setOrder('')
+        setOrderWeight('')
+      }; 
+
+    const handleSortDogs = (e) => {
+        dispatch(sortDogs(e.target.value));
+        setOrder(e.target.value)
+      };
+      const handleSortWeight = (e) => {
+        dispatch(sortByWeight(e.target.value));
+        setOrderWeight(e.target.value)
+      };
 
 
 
@@ -68,17 +85,24 @@ return (
                 })}
             </select> 
             <select value={origin} onChange={handleOriginFilter}>
-            <option value="All">All dogs</option>
-            <option value="api">DB Dogs</option>
-            <option value="db">API Dogs</option>
+            <option value="All">Origin</option>
+            <option value="db">DB Dogs</option>
+            <option value="api">API Dogs</option>
           </select>
+          <select value={order} onChange={handleSortDogs}>
+          <option value='by letter...' key='defaultOption'>by letter...</option>
+            <option value="Ascending">A-Z</option>
+            <option value="Descending">Z-A</option>
+            </select> <select value={orderWeight} onChange={handleSortWeight}>
+            <option value='by weight...' key='defaultOption'>by weight...</option>
+            <option value="Ascending Weight">Ascending</option>
+            <option value="Descending Weight">Descending</option>
+          </select>
+         <button  className='ResetFiltersButton' onClick={handleResetFilters}>Reset Filters</button>
         </div>
         
-        {/* <select className="select-box" onChange={filterOrigin}>
-            <option value="ALL">ALL</option>
-            <option value="DB">DB</option>
-            <option value="API">API</option>
-        </select> */}
+        
+        
         <Cards dogs={toShow} />
     </div>
 );
