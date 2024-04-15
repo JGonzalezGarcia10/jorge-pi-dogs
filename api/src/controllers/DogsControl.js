@@ -71,36 +71,58 @@ async function searchDogsByName (req, res){
 
 const createDog = async (req, res) => {
     try {
-        const { image, name, height, weight, temperaments, life_span } = req.body;
-
-        // Verifica que se proporcionen todos los campos necesarios
-        if (!image || !name || !height || !weight || !temperaments || !life_span) {
-            return res.status(400).json({ message: 'Todos los campos son requeridos' });
-        }
-
-        // Crea el perro en la base de datos
-        const newDog = await Dog.create({
-            image,
-            name,
-            height,
-            weight,
-            life_span,
-        });
-
-        // Busca los temperamentos en la base de datos
-        const temperamentsDB = await Temperament.findAll({
-            where: { name: temperaments }, // Busca los temperamentos por nombre
-        });
-
-        // Asocia los temperamentos encontrados con el perro creado
-        await newDog.addTemperaments(temperamentsDB);
-
-        res.status(201).json({ message: 'Perro creado exitosamente', dog: newDog });
-    } catch (error) {
-        console.error('Error al crear el perro:', error);
-        res.status(500).json({ message: 'Hubo un error al crear el perro' });
+      const data = req.body
+  
+      /*
+        Creamos el modelo del perro extrayendo los datos que recibimos por body
+      */
+      const perro = {
+        image: data.image,
+        name: data.name,
+        height: data.height,
+        weight: data.weight,
+        life_span: data.life_span
     }
-};
+
+    /*
+        Verificamos si temperamentos es un Array y si contiene algo
+      */
+    const temperaments = Array.isArray(data.temperamentos) ? data.temperamentos : [];
+    /*
+        Creamos el perro con los datos recibidos por body
+      */
+    const dog = await Dog.create(perro)
+    /*
+        Conseguimos todos los temperamentos de nuestro modelo Temnperament que coincidan con los que recibimos por body
+      */
+    const temperamentos = await Promise.all(temperaments.map(async temperament => {
+        return await Temperament.findOne({where: {name: temperament}})
+    }))
+    /*
+        Ahora por cada temperamento que tengamos coincidentes los vinculamos con el perro que estamos creando
+      */
+    await Promise.all(temperamentos.map(async temperament => {
+        await dog.setTemperaments([temperament])
+    }))
+
+    /*
+        Conseguimos el perro que se a creado con sus temperamentos vinculados
+      */
+    const dogAdded = await Dog.findAll({
+        include:[{
+        model: Temperament,
+        attributes: ["name"],
+        through: { attributes: [] }
+        }]
+    });
+
+    res.send(dogAdded)
+    } catch (error) {
+    console.error(error)
+    res.status(500).send("Hubo un error al añadir un nuevo perro", error.message);
+    }
+}
+
 // const createDog = async (req, res) => {
 //     try {
 //         // Extraer los datos del cuerpo de la solicitud
