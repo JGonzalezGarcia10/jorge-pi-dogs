@@ -3,7 +3,8 @@ import Cards from './Cards';
 import React, {  useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SearchBar from './SearchBar';
-import { getAllDogs } from '../Utils/apiFunctions';
+import './CSScomponents/HomePage.css'
+
 
 
 const HomePage = () => {
@@ -29,13 +30,6 @@ useEffect(() => {
     dispatch(getAllTemperaments());
 }, [dispatch]);
 
-// useEffect(() => {
-//         if (filteredResults.length === 0) {
-//         // setOrder('')
-//         setTemperament('')
-//         // setOrderPopulation('')
-//         }
-//     }, [filteredResults]);
 
     const handleTempFilter = (e) => {
         const selectedValue = e.target.value;
@@ -51,25 +45,28 @@ useEffect(() => {
         setOrigin(originValue)
     };
 
-    const handleResetFilters = () => {
-        dispatch(filterByTemperaments('All'));
-        dispatch(filterByOrigin('All'));
-        setOrder('')
-        setOrderWeight('')
-      }; 
+    // const handleResetFilters = () => {
+    //     dispatch(filterByTemperaments('All'));
+    //     dispatch(filterByOrigin('All'));
+    //     setOrder('')
+    //     setOrderWeight('')
+    // }; 
 
     const handleSortDogs = (e) => {
         dispatch(sortDogs(e.target.value));
         setOrder(e.target.value)
-      };
-      const handleSortWeight = (e) => {
+    };
+    const handleSortWeight = (e) => {
         dispatch(sortByWeight(e.target.value));
         setOrderWeight(e.target.value)
-      };
+    };
 
-      const handleResetSearch = () => {
+    const handleResetSearch = () => {
         dispatch(getDogs());
         dispatch(searchDogssByName(''))
+        dispatch(filterByOrigin('All'));
+        setOrder('')
+        setOrderWeight('')
     };
 
 
@@ -93,18 +90,18 @@ return (
             <option value="All">DB and API</option>
             <option value="db">DB Dogs</option>
             <option value="api">API Dogs</option>
-          </select>
-          <select value={order} onChange={handleSortDogs}>
-          <option value='by letter...' key='defaultOption'>by letter...</option>
+        </select>
+        <select value={order} onChange={handleSortDogs}>
+        <option value='by letter...' key='defaultOption'>by letter...</option>
             <option value="Ascending">A-Z</option>
             <option value="Descending">Z-A</option>
             </select> <select value={orderWeight} onChange={handleSortWeight}>
             <option value='by weight...' key='defaultOption'>by weight...</option>
             <option value="Ascending Weight">Ascending</option>
             <option value="Descending Weight">Descending</option>
-          </select>
-         <button  className='ResetFiltersButton' onClick={handleResetFilters}>Reset Filters</button>
-         <button onClick={handleResetSearch}>Reset name search</button>
+        </select>
+        {/* <button  className='ResetFiltersButton' onClick={handleResetFilters}>Reset Filters</button> */}
+        <button onClick={handleResetSearch}>Reset search</button>
         </div>
         
         

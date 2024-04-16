@@ -33,28 +33,6 @@ const getAllTemperaments = async (req, res) => {
 }
 
 
-
-// const getAllTemperaments = async (req, res) => {
-//     try {
-
-//         const temperamentsInDB = await Temperament.findAll();
-//         if (temperamentsInDB.length === 0) {
-
-//             const temperamentsApi = await axios.get(`https://api.rawg.io/api/genres?key=${API_KEY}`);
-//             const temperamentsData = temperamentsApi.data;
-
-//             await Temperament.bulkCreate(temperamentsData);
-//         }
-
-//         const temperaments = await Temperament.findAll();
-
-//         res.json(temperaments);
-//     } catch (error) {
-//         console.error('Error obtaining temperaments:', error);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// };
-
 module.exports = {
     getAllTemperaments
 }

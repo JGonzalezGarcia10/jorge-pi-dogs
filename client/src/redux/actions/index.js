@@ -2,29 +2,7 @@ import { GET_DOGS, FILTER_BY_TEMPERAMENTS, POST_DOG, GET_ALL_TEMPERAMENTS, SEARC
 import axios from 'axios';
 import { getDogsById, postDog } from '../../Utils/apiFunctions';
 
-// export function searchDogssByName(name) {
-//     return async function(dispatch) {
-//       try {
-//         if (name.trim() === "") {
-//           // Si el nombre está vacío, devuelve todos los perros
-//           const response = await axios.get(`http://localhost:3001/dogs`);
-//           dispatch({
-//             type: SEARCH_DOGS_BY_NAME,
-//             payload: response.data
-//           });
-//         } else {
-//           // Si se proporciona un nombre, realiza la búsqueda normalmente
-//           const response = await axios.get(`http://localhost:3001/dogs/name?name=${name}`);
-//           dispatch({
-//             type: SEARCH_DOGS_BY_NAME,
-//             payload: response.data
-//           });
-//         }
-//       } catch (error) {
-//         console.error('Error searching dogs:', error);
-//       }
-//     };
-//   }
+
 export function searchDogssByName(name) {
     return async function(dispatch) {
         try {
