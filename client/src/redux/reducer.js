@@ -30,52 +30,115 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 getDogById: action.payload,
             }
-        case SEARCH_DOGS_BY_NAME:
-            return {
-                ...state,
-                searchResults: action.payload, // Actualizar los resultados de búsqueda con los perros encontrados por nombre
-            };          
+            case SEARCH_DOGS_BY_NAME:
+                const { payload: searchResults } = action;
+            
+                // Aplicar los otros filtros sobre los resultados de búsqueda por nombre
+                let filteredResultsAfterSearch = [];
+            
+                if (state.filteredByOrigin.length > 0) {
+                    // Si se ha aplicado el filtro de origen, trabajar sobre los perros filtrados por origen
+                    filteredResultsAfterSearch = searchResults.filter((dog) =>
+                        state.filteredByOrigin.includes(dog)
+                    );
+                } else {
+                    // Si no se ha aplicado el filtro de origen, trabajar sobre los resultados de búsqueda
+                    filteredResultsAfterSearch = [...searchResults];
+                }
+            
+                // Aplicar filtro de temperamento sobre los resultados de búsqueda por nombre
+                let filteredResultsAfterTemperaments = [];
+            
+                if (state.filterTemperament !== "default") {
+                    filteredResultsAfterTemperaments = filteredResultsAfterSearch.filter((dog) => {
+                        if (dog.Temperaments) {
+                            return dog.Temperaments.some((temp) => temp.name === state.filterTemperament);
+                        } else if (dog.temperament) {
+                            return dog.temperament.includes(state.filterTemperament);
+                        } else {
+                            return false;
+                        }
+                    });
+                } else {
+                    filteredResultsAfterTemperaments = [...filteredResultsAfterSearch];
+                }
+            
+                return {
+                    ...state,
+                    searchResults: searchResults,
+                    filteredResults: filteredResultsAfterTemperaments,
+                };          
 
 
             case FILTER_BY_TEMPERAMENTS:
-                let filteredDogs = [];
-                // Verificar si hay resultados de búsqueda activos
-                if (state.searchResults.length > 0) {
-                    // Si hay resultados de búsqueda, filtrar dentro de ellos
-                    filteredDogs = state.searchResults.filter((dog) => {
-                        // Verifica si dog.temperament existe y luego verifica si contiene action.payload
-                        return dog.temperament && dog.temperament.includes(action.payload);
+                const { payload } = action;
+                let filteredResultsByTemperaments = [];
+            
+                if (state.filteredByOrigin.length > 0) {
+                    // Si se ha aplicado el filtro de origen, trabajar sobre los perros filtrados por origen
+                    filteredResultsByTemperaments = state.filteredByOrigin.filter((dog) => {
+                        if (dog.Temperaments) {
+                            return dog.Temperaments.some((temp) => temp.name === payload);
+                        } else if (dog.temperament) {
+                            return dog.temperament.includes(payload);
+                        } else {
+                            return false; // Por si acaso, manejo de caso donde no hay información de temperamento
+                        }
                     });
                 } else {
-                    // Si no hay resultados de búsqueda, filtrar dentro de todos los perros
-                    filteredDogs = state.dogs.filter((dog) => {
-                        // Verifica si dog.temperament existe y luego verifica si contiene action.payload
-                        return dog.temperament && dog.temperament.includes(action.payload);
+                    // Si no se ha aplicado el filtro de origen, trabajar sobre todos los perros
+                    filteredResultsByTemperaments = state.dogs.filter((dog) => {
+                        if (dog.Temperaments) {
+                            return dog.Temperaments.some((temp) => temp.name === payload);
+                        } else if (dog.temperament) {
+                            return dog.temperament.includes(payload);
+                        } else {
+                            return false; // Por si acaso, manejo de caso donde no hay información de temperamento
+                        }
                     });
                 }
+            
                 return {
                     ...state,
-                    filteredResults: filteredDogs,
+                    filteredResults: filteredResultsByTemperaments,
                 };
 
-                case FILTER_ORIGIN:
-                    // PREGUNTAR AL PONER FILTRO Y DESPUES BUSCAR ME BUSCA TODOS Y NO LOS DEL FILTRO
-                    let filteredByOrigin = [];
-                        if (action.payload === "All") {
-                            // Si el payload es "All", devuelve todos los perros
-                            filteredByOrigin = state.dogs;
-                        } else if (action.payload === "api") {
-                            // Si el payload es "api", devuelve los perros que tienen la propiedad "createdInDb"
-                            filteredByOrigin = state.dogs.filter(dog => dog?.createdAt === undefined);
-                        } else if (action.payload === "db") {
-                            // Si el payload es "db", devuelve los perros que NO tienen la propiedad "createdInDb"
-                            filteredByOrigin = state.dogs.filter(dog => dog?.createdAt !== undefined);
-                        }
-                    
-                    return {
-                    ...state,
-                    filteredResults: filteredByOrigin,
-                    };
+    case FILTER_ORIGIN:
+        let filteredDogsByOrigin = [];
+    
+        if (action.payload === "All") {
+            // Si el payload es "All", devuelve todos los perros
+            filteredDogsByOrigin = state.dogs;
+        } else if (action.payload === "api") {
+            // Si el payload es "api", devuelve los perros que tienen la propiedad "createdAt" undefined (probablemente los de la API)
+            filteredDogsByOrigin = state.dogs.filter(dog => dog.createdAt === undefined);
+        } else if (action.payload === "db") {
+            // Si el payload es "db", devuelve los perros que tienen la propiedad "createdAt" definida (probablemente los de la base de datos)
+            filteredDogsByOrigin = state.dogs.filter(dog => dog.createdAt !== undefined);
+        }
+    
+        // Aplicar filtro de temperamento sobre los perros filtrados por origen
+        let filteredResults = [];
+    
+        if (state.filterTemperament !== "default") {
+            filteredResults = filteredDogsByOrigin.filter((dog) => {
+                if (dog.Temperaments) {
+                    return dog.Temperaments.some((temp) => temp.name === state.filterTemperament);
+                } else if (dog.temperament) {
+                    return dog.temperament.includes(state.filterTemperament);
+                } else {
+                    return false; // Por si acaso, manejo de caso donde no hay información de temperamento
+                }
+            });
+        } else {
+            filteredResults = filteredDogsByOrigin;
+        }
+    
+        return {
+            ...state,
+            filteredByOrigin: filteredDogsByOrigin,
+            filteredResults: filteredResults,
+        };
 
                 case SORT_DOGS:
                     const hasFilteredResults = state.filteredResults.length > 0;
@@ -118,44 +181,52 @@ export default function rootReducer(state = initialState, action) {
                     }
 
                     case SORT_BY_WEIGHT:
-                    const hasFilteredResults2 = state.filteredResults.length > 0;
-                    const hasSearchResults2 = state.searchResults.length > 0;
-
-                    let resultsToSort2 = [];
-
-                    if (hasFilteredResults2) {
-                        resultsToSort2 = [...state.filteredResults];
-                    } else if (hasSearchResults2) {
-                        resultsToSort2 = [...state.searchResults];
-                    } else {
-                        resultsToSort2 = [...state.dogs];
-                    }
-
-                    // Sort the results based on the payload
-                    if (action.payload === "Ascending") {
-                        resultsToSort2.sort((a, b) => a.weight.localeCompare(b.weight)) ;
-                    } else if (action.payload === "Descending") {
-                        resultsToSort2.sort((a, b) => b.weight.localeCompare(a.wheight));
-                    }
-
-                    // Update the state based on the scenario
-                    if (hasFilteredResults2) {
-                        return {
-                        ...state,
-                        filteredResults: resultsToSort2,
-                        };
-                    } else if (hasSearchResults2) {
-                        return {
-                        ...state,
-                        searchResults: resultsToSort2,
-                        };
-                    } else {
-                        return {
-                        ...state,
-                        filteredResults: resultsToSort2,
-                        searchResults: resultsToSort2,
-                        };
-                    }
+                            const hasFilteredResultsWeight = state.filteredResults.length > 0;
+                            const hasSearchResultsWeight = state.searchResults.length > 0;
+                          
+                            let resultsToSortWeight = [];
+                          
+                            if (hasFilteredResultsWeight) {
+                              resultsToSortWeight = [...state.filteredResults];
+                            } else if (hasSearchResultsWeight) {
+                              resultsToSortWeight = [...state.searchResults];
+                            } else {
+                              resultsToSortWeight = [...state.dogs];
+                            }
+                          
+                            // Sort the results based on the payload
+                            if (action.payload === "menosPeso") {
+                              resultsToSortWeight.sort((a, b) => {
+                                const pesoA = parseInt(a.peso.split(" - ")[1]);
+                                const pesoB = parseInt(b.peso.split(" - ")[1]);
+                                return pesoA - pesoB;
+                              });
+                            } else if (action.payload === "masPeso") {
+                              resultsToSortWeight.sort((a, b) => {
+                                const pesoA = parseInt(a.peso.split(" - ")[1]);
+                                const pesoB = parseInt(b.peso.split(" - ")[1]);
+                                return pesoB - pesoA;
+                              });
+                            }
+                          
+                            // Update the state based on the scenario
+                            if (hasFilteredResultsWeight) {
+                              return {
+                                ...state,
+                                filteredResults: resultsToSortWeight,
+                              };
+                            } else if (hasSearchResultsWeight) {
+                              return {
+                                ...state,
+                                searchResults: resultsToSortWeight,
+                              };
+                            } else {
+                              return {
+                                ...state,
+                                filteredResults: resultsToSortWeight,
+                                searchResults: resultsToSortWeight,
+                              };
+                            }
 
                     
 

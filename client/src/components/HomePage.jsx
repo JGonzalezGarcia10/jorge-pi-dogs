@@ -1,4 +1,4 @@
-import getDogs, { filterByOrigin, filterByTemperaments, getAllTemperaments, sortDogs, sortByWeight } from '../redux/actions/index';
+import  { filterByOrigin, filterByTemperaments, getAllTemperaments, sortDogs, sortByWeight,getDogs } from '../redux/actions/index';
 import Cards from './Cards';
 import React, {  useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

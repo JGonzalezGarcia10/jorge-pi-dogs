@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { searchDogssByName } from "../redux/actions/index";
+import { searchDogssByName, getDogs } from "../redux/actions/index";
 import './CSScomponents/SearchBar.css';
-import getDogs from "../redux/actions/index";
 import { Link } from "react-router-dom";
 
 export default function SearchBar(props) {
@@ -20,6 +19,7 @@ export default function SearchBar(props) {
   };
   const handleResetSearch = () => {
     dispatch(getDogs());
+    dispatch(searchDogssByName(''))
 };
 
   return (

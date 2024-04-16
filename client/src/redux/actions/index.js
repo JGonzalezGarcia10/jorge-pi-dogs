@@ -2,7 +2,7 @@ import { GET_DOGS, FILTER_BY_TEMPERAMENTS, POST_DOG, GET_ALL_TEMPERAMENTS, SEARC
 import axios from 'axios';
 import { getDogsById, postDog } from '../../Utils/apiFunctions';
 
-export function searchDogssByName(name) {
+export function searchDogssByName(name, origin) {
 return async function(dispatch) {
     try {
     const response = await axios.get(`http://localhost:3001/dogs/name?name=${name}`);
@@ -16,7 +16,7 @@ return async function(dispatch) {
 };
 }
 
-export default function getDogs() {
+export function getDogs() {
     return async function (dispatch){
         var result = await axios.get('http://localhost:3001/dogs'); 
         return dispatch({ 
