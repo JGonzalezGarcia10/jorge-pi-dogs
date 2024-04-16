@@ -16,10 +16,14 @@ const initialState = {
 export default function rootReducer(state = initialState, action) {
     switch (action.type) {
         case GET_DOGS:
+            // Cuando se llama a GET_DOGS, simplemente actualiza la lista de perros con la nueva información
             return {
                 ...state,
                 dogs: action.payload,
-            }
+                allDogsCopy: action.payload // También actualiza la copia de todos los perros
+            };
+
+            
         case GET_ALL_TEMPERAMENTS:
             return {
                 ...state,
@@ -32,18 +36,32 @@ export default function rootReducer(state = initialState, action) {
             }
             case SEARCH_DOGS_BY_NAME:
                 const { payload: searchResults } = action;
+                console.log (action)
             
-                // Aplicar los otros filtros sobre los resultados de búsqueda por nombre
                 let filteredResultsAfterSearch = [];
             
-                if (state.filteredByOrigin.length > 0) {
-                    // Si se ha aplicado el filtro de origen, trabajar sobre los perros filtrados por origen
-                    filteredResultsAfterSearch = searchResults.filter((dog) =>
-                        state.filteredByOrigin.includes(dog)
-                    );
+                if (state.filteredResults.length > 0) {
+                    // Si filteredResults no está vacío, trabajar sobre esos resultados
+                    if (state.filteredByOrigin.length > 0) {
+                        // Si se ha aplicado el filtro de origen, trabajar sobre los perros filtrados por origen
+                        filteredResultsAfterSearch = searchResults.filter((dog) =>
+                            state.filteredResults.includes(dog)
+                        );
+                    } else {
+                        // Si no se ha aplicado el filtro de origen, trabajar sobre los resultados de filteredResults
+                        filteredResultsAfterSearch = [...state.filteredResults];
+                    }
                 } else {
-                    // Si no se ha aplicado el filtro de origen, trabajar sobre los resultados de búsqueda
-                    filteredResultsAfterSearch = [...searchResults];
+                    // Si filteredResults está vacío, trabajar sobre los resultados de búsqueda
+                    if (state.filteredByOrigin.length > 0) {
+                        // Si se ha aplicado el filtro de origen, trabajar sobre los perros filtrados por origen
+                        filteredResultsAfterSearch = searchResults.filter((dog) =>
+                            state.filteredResults.includes(dog)
+                        );
+                    } else {
+                        // Si no se ha aplicado el filtro de origen, trabajar sobre los resultados de búsqueda
+                        filteredResultsAfterSearch = [...searchResults];
+                    }
                 }
             
                 // Aplicar filtro de temperamento sobre los resultados de búsqueda por nombre
@@ -67,109 +85,129 @@ export default function rootReducer(state = initialState, action) {
                     ...state,
                     searchResults: searchResults,
                     filteredResults: filteredResultsAfterTemperaments,
-                };     
+                };   
             
 
 
             case FILTER_BY_TEMPERAMENTS:
                 const { payload } = action;
                 let filteredResultsByTemperaments = [];
-            
+                let updatedSearchResults = []; // Mantener una copia actualizada de los resultados de búsqueda
+
                 if (state.searchResults.length > 0) {
                     // Si hay resultados de búsqueda, trabajar sobre esos resultados
+                    updatedSearchResults = [...state.searchResults]; // Copiar los resultados de búsqueda para actualizarlos
+
                     filteredResultsByTemperaments = state.searchResults.filter((dog) => {
+                        // Filtrar los resultados de búsqueda por temperamento
                         if (dog.Temperaments) {
                             return dog.Temperaments.some((temp) => temp.name === payload);
                         } else if (dog.temperament) {
                             return dog.temperament.includes(payload);
                         } else {
-                            return false; // Por si acaso, manejo de caso donde no hay información de temperamento
+                            return false;
                         }
                     });
                 } else {
                     // Si no hay resultados de búsqueda, trabajar sobre los perros filtrados por origen o todos los perros
                     if (state.filteredByOrigin.length > 0) {
                         // Si se ha aplicado el filtro de origen, trabajar sobre los perros filtrados por origen
+                        updatedSearchResults = [...state.filteredByOrigin]; // Actualizar los resultados de búsqueda con los resultados filtrados por origen
+
                         filteredResultsByTemperaments = state.filteredByOrigin.filter((dog) => {
+                            // Filtrar los perros filtrados por origen por temperamento
                             if (dog.Temperaments) {
                                 return dog.Temperaments.some((temp) => temp.name === payload);
                             } else if (dog.temperament) {
                                 return dog.temperament.includes(payload);
                             } else {
-                                return false; // Por si acaso, manejo de caso donde no hay información de temperamento
+                                return false;
                             }
                         });
                     } else {
                         // Si no se ha aplicado el filtro de origen, trabajar sobre todos los perros
+                        updatedSearchResults = [...state.dogs]; // Actualizar los resultados de búsqueda con todos los perros
+
                         filteredResultsByTemperaments = state.dogs.filter((dog) => {
+                            // Filtrar todos los perros por temperamento
                             if (dog.Temperaments) {
                                 return dog.Temperaments.some((temp) => temp.name === payload);
                             } else if (dog.temperament) {
                                 return dog.temperament.includes(payload);
                             } else {
-                                return false; // Por si acaso, manejo de caso donde no hay información de temperamento
+                                return false;
                             }
                         });
                     }
                 }
-            
+
+                // Verificar si el resultado del filtro está vacío
+                if (filteredResultsByTemperaments.length === 0) {
+                    alert('No se encontraron perros con ese temperamento');
+                }
+
                 return {
                     ...state,
-                    filteredResults: filteredResultsByTemperaments,
+                    searchResults: updatedSearchResults, // Actualizar los resultados de búsqueda
+                    filteredResults: filteredResultsByTemperaments, // Actualizar los resultados filtrados por temperamento
                 };
 
-    case FILTER_ORIGIN:
-    
-        let filteredDogsByOrigin = [];
-
-    if (state.searchResults.length > 0) {
-        // Si hay resultados de búsqueda, trabajamos con ese array
-        if (action.payload === "All") {
-            // Si el payload es "All", devuelve todos los perros filtrados
-            filteredDogsByOrigin = [...state.searchResults];
-        } else if (action.payload === "api") {
-            // Filtrar los perros de la búsqueda que tienen la propiedad "createdAt" undefined (probablemente los de la API)
-            filteredDogsByOrigin = state.searchResults.filter(dog => dog.createdAt === undefined);
-        } else if (action.payload === "db") {
-            // Filtrar los perros de la búsqueda que tienen la propiedad "createdAt" definida (probablemente los de la base de datos)
-            filteredDogsByOrigin = state.searchResults.filter(dog => dog.createdAt !== undefined);
-        }
-    } else {
-        // Si no hay resultados de búsqueda, trabajamos con el array original de perros
-        if (action.payload === "All") {
-            // Si el payload es "All", devuelve todos los perros
-            filteredDogsByOrigin = [...state.dogs];
-        } else if (action.payload === "api") {
-            // Si el payload es "api", devuelve los perros que tienen la propiedad "createdAt" undefined (probablemente los de la API)
-            filteredDogsByOrigin = state.dogs.filter(dog => dog.createdAt === undefined);
-        } else if (action.payload === "db") {
-            // Si el payload es "db", devuelve los perros que tienen la propiedad "createdAt" definida (probablemente los de la base de datos)
-            filteredDogsByOrigin = state.dogs.filter(dog => dog.createdAt !== undefined);
-        }
-    }
-    
-        // Aplicar filtro de temperamento sobre los perros filtrados por origen
-        let filteredResults = [];
-    
-        if (state.filterTemperament !== "default") {
-            filteredResults = filteredDogsByOrigin.filter((dog) => {
-                if (dog.Temperaments) {
-                    return dog.Temperaments.some((temp) => temp.name === state.filterTemperament);
-                } else if (dog.temperament) {
-                    return dog.temperament.includes(state.filterTemperament);
-                } else {
-                    return false; // Por si acaso, manejo de caso donde no hay información de temperamento
-                }
-            });
-        } else {
-            filteredResults = filteredDogsByOrigin;
-        }
-    
-        return {
-            ...state,
-            filteredByOrigin: filteredDogsByOrigin,
-            filteredResults: filteredResults,
-        };
+                    case FILTER_ORIGIN:
+                        let filteredDogsByOrigin = [];
+                    
+                        if (state.searchResults.length > 0) {
+                            // Si hay resultados de búsqueda, trabajamos con ese array
+                            if (action.payload === "All") {
+                                // Si el payload es "All", devuelve todos los perros filtrados
+                                filteredDogsByOrigin = [...state.searchResults];
+                            } else if (action.payload === "api") {
+                                // Filtrar los perros de la búsqueda que tienen la propiedad "createdAt" undefined (probablemente los de la API)
+                                filteredDogsByOrigin = state.searchResults.filter(dog => dog.createdAt === undefined);
+                            } else if (action.payload === "db") {
+                                // Filtrar los perros de la búsqueda que tienen la propiedad "createdAt" definida (probablemente los de la base de datos)
+                                filteredDogsByOrigin = state.searchResults.filter(dog => dog.createdAt !== undefined);
+                            }
+                        } else {
+                            // Si no hay resultados de búsqueda, trabajamos con el array original de perros
+                            if (action.payload === "All") {
+                                // Si el payload es "All", devuelve todos los perros
+                                filteredDogsByOrigin = [...state.dogs];
+                            } else if (action.payload === "api") {
+                                // Si el payload es "api", devuelve los perros que tienen la propiedad "createdAt" undefined (probablemente los de la API)
+                                filteredDogsByOrigin = state.dogs.filter(dog => dog.createdAt === undefined);
+                            } else if (action.payload === "db") {
+                                // Si el payload es "db", devuelve los perros que tienen la propiedad "createdAt" definida (probablemente los de la base de datos)
+                                filteredDogsByOrigin = state.dogs.filter(dog => dog.createdAt !== undefined);
+                            }
+                        }
+                    
+                        // Verificar si no se encontraron perros en la base de datos
+                        if (action.payload === "db" && filteredDogsByOrigin.length === 0) {
+                            alert("No se encontraron perros en la base de datos");
+                        }
+                    
+                        // Aplicar filtro de temperamento sobre los perros filtrados por origen
+                        let filteredResults = [];
+                    
+                        if (state.filterTemperament !== "default") {
+                            filteredResults = filteredDogsByOrigin.filter((dog) => {
+                                if (dog.Temperaments) {
+                                    return dog.Temperaments.some((temp) => temp.name === state.filterTemperament);
+                                } else if (dog.temperament) {
+                                    return dog.temperament.includes(state.filterTemperament);
+                                } else {
+                                    return false; // Por si acaso, manejo de caso donde no hay información de temperamento
+                                }
+                            });
+                        } else {
+                            filteredResults = filteredDogsByOrigin;
+                        }
+                    
+                        return {
+                            ...state,
+                            filteredByOrigin: filteredDogsByOrigin,
+                            filteredResults: filteredResults,
+                        };
 
                 case SORT_DOGS:
                     const hasFilteredResults = state.filteredResults.length > 0;

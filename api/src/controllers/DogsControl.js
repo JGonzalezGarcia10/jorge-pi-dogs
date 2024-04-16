@@ -60,6 +60,8 @@ async function searchDogsByName(req, res) {
             // Combina los resultados de la base de datos y la API
             const combinedResults = dogsDB.concat(dogsApi);
 
+            
+
             // Elimina duplicados basados en el campo 'id'
             const uniqueResults = combinedResults.filter((dog, index, self) =>
                 index === self.findIndex((d) => (

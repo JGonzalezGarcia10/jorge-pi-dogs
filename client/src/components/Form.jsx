@@ -22,7 +22,7 @@ export default function Form() {
 }, [dispatch]);
 
   const allTemperaments = useSelector((state) => state.dogs.allTemperaments)
-
+  const [errors, setErrors] = useState({});
 
 
   const handleChange = (event) => {
@@ -103,18 +103,38 @@ export default function Form() {
 
   const handleSave = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/dogs', valor, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      alert('Datos guardados correctamente');
-      // Puedes realizar alguna acción adicional después de guardar los datos, como limpiar el formulario
+      if (validateForm()) { // Llamar a la función de validación
+        const response = await axios.post('http://localhost:3001/dogs', valor, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        alert('Datos guardados correctamente');
+        // Puedes realizar alguna acción adicional después de guardar los datos, como limpiar el formulario
+      }
     } catch (error) {
       console.error('Error:', error);
       alert('Error al guardar los datos');
     }
   };
+  const validateForm = () => {
+    let isValid = true;
+    let errorMessage = '';
+  
+    // Validar que todos los campos obligatorios estén completos
+    if (!valor.name || !valor.image || !valor.height || !valor.weight || !valor.life_span || temperamentsSeleccionados.length === 0) {
+      isValid = false;
+      errorMessage += "Todos los campos son obligatorios\n";
+    }
+  
+    // Resto de validaciones...
+    
+    if (!isValid) {
+      alert(errorMessage);
+    }
+  
+    return isValid;
+  }
 
   return (
     <div className='FormContenedorGeneral'>

@@ -1,4 +1,4 @@
-import  { filterByOrigin, filterByTemperaments, getAllTemperaments, sortDogs, sortByWeight,getDogs } from '../redux/actions/index';
+import  { filterByOrigin, filterByTemperaments, getAllTemperaments, sortDogs, sortByWeight,getDogs, searchDogssByName } from '../redux/actions/index';
 import Cards from './Cards';
 import React, {  useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -67,6 +67,11 @@ useEffect(() => {
         setOrderWeight(e.target.value)
       };
 
+      const handleResetSearch = () => {
+        dispatch(getDogs());
+        dispatch(searchDogssByName(''))
+    };
+
 
 
 
@@ -99,6 +104,7 @@ return (
             <option value="Descending Weight">Descending</option>
           </select>
          <button  className='ResetFiltersButton' onClick={handleResetFilters}>Reset Filters</button>
+         <button onClick={handleResetSearch}>Reset name search</button>
         </div>
         
         

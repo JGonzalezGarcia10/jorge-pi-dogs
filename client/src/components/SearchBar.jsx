@@ -17,10 +17,7 @@ export default function SearchBar(props) {
     dispatch(searchDogssByName(name));
     setName("");
   };
-  const handleResetSearch = () => {
-    dispatch(getDogs());
-    dispatch(searchDogssByName(''))
-};
+
 
   return (
     <div className="search-container">
@@ -35,7 +32,7 @@ export default function SearchBar(props) {
         <button className="sbbot" onClick={handleSubmit} type="submit">
           Buscar
         </button>
-        <button onClick={handleResetSearch}>Restaurar búsqueda</button>
+        
         <Link to = {"/form"}>
               <button>Create dog</button>
             </Link>
