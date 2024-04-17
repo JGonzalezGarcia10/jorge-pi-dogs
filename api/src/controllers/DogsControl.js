@@ -6,7 +6,7 @@ const { Op } = require('sequelize');
 
 // All
 async function getAllDogs(req, res, next) {
-    try {
+    try { 
         localDogs = await Dog.findAll({ include: Temperament });
         const desiredTotalDogs = 100;
         const localDogsCount = localDogs.length;

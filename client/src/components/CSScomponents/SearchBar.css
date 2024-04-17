@@ -1,19 +1,66 @@
+/* SearchBar.css */
+
 .search-container {
     display: flex;
     justify-content: center;
+  }
+  
+  .sbcontainer {
+    display: flex;
     align-items: center;
-    height: 10vh; /* Ajusta la altura si es necesario */
-}
+  }
+  
+  .sbinput {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 200px; /* Ancho del input */
+  height: 30px; /* Altura del input */
 
-
-.sbinput {
-    width: 280px; /* Ajusta el ancho del input */
-    height: 30px; /* Ajusta la altura del input */
-    font-size: 16px; /* Ajusta el tamaño del texto */
-}
-
-.sbbot {
-    /* Estilos adicionales para el botón de la barra de búsqueda */
-    height: 50px; /* Ajusta la altura del botón */
-    font-size: 16px; /* Ajusta el tamaño del texto del botón */
-}
+  }
+  
+  .sbbot {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .sbbot:hover {
+    background-color: #45a049;
+  }
+  
+  .sbbot:focus {
+    outline: none;
+  }
+  
+  .sbbot:active {
+    background-color: #3e8e41;
+  }
+  
+  /* Estilos para el botón "Create dog" */
+  .create-dog-button {
+    padding: 8px 16px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .create-dog-button:hover {
+    background-color: #4CAF50;
+  }
+  
+  .create-dog-button:focus {
+    outline: none;
+  }
+  
+  .create-dog-button:active {
+    background-color: #4CAF50;
+  }

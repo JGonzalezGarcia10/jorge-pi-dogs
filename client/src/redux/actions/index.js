@@ -1,10 +1,10 @@
-import { GET_DOGS, FILTER_BY_TEMPERAMENTS, POST_DOG, GET_ALL_TEMPERAMENTS, SEARCH_DOGS_BY_NAME, GET_DOG_BY_ID, FILTER_ORIGIN} from './types';
+import { GET_DOGS, FILTER_BY_TEMPERAMENTS, POST_DOG, GET_ALL_TEMPERAMENTS, SEARCH_DOGS_BY_NAME, GET_DOG_BY_ID, FILTER_ORIGIN } from './types';
 import axios from 'axios';
 import { getDogsById, postDog } from '../../Utils/apiFunctions';
 
 
 export function searchDogssByName(name) {
-    return async function(dispatch) {
+    return async function (dispatch) {
         try {
             if (name.trim() === "") {
                 // Si el nombre está vacío, devuelve todos los perros
@@ -32,12 +32,12 @@ export function searchDogssByName(name) {
 }
 
 export function getDogs() {
-    return async function (dispatch){
-        var result = await axios.get('http://localhost:3001/dogs'); 
-        return dispatch({ 
-            type: GET_DOGS, 
+    return async function (dispatch) {
+        var result = await axios.get('http://localhost:3001/dogs');
+        return dispatch({
+            type: GET_DOGS,
             payload: result.data
-        })                                                                                                 
+        })
     }
 }
 
@@ -64,7 +64,7 @@ export const filterByTemperaments = (temperament) => {
         type: FILTER_BY_TEMPERAMENTS,
         payload: temperament,
 
-        
+
     }
 }
 
@@ -73,12 +73,12 @@ export const filterByOrigin = (origin) => {
         type: FILTER_ORIGIN,
         payload: origin,
 
-        
+
     }
 }
 export const postRace = (form) => {
     console.log(form);
-    return async (dispatch) =>{
+    return async (dispatch) => {
         try {
             const newDog = await postDog(form);
             return dispatch({
@@ -98,19 +98,20 @@ export const postRace = (form) => {
 export const setDogById = (id) => {
     return async (dispatch) => {
         try {
-            if(id === "reset"){ 
+            if (id === "reset") {
                 return dispatch({
                     type: GET_DOG_BY_ID,
                     payload: {},
                 })
-            }else{
+            } else {
                 const dogs = await getDogsById(id);
-        
+
                 return dispatch({
                     type: GET_DOG_BY_ID,
                     payload: dogs,
-                })}
-            
+                })
+            }
+
         } catch (error) {
             console.log('server error!');
         }
@@ -119,13 +120,13 @@ export const setDogById = (id) => {
 
 export const sortDogs = (order) => {
     return {
-    type: "SORT_DOGS",
-    payload: order,
+        type: "SORT_DOGS",
+        payload: order,
     }
 };
 export const sortByWeight = (orderWeight) => {
     return {
-    type: "SORT_BY_WEIGHT",
-    payload: orderWeight,
+        type: "SORT_BY_WEIGHT",
+        payload: orderWeight,
     }
 };

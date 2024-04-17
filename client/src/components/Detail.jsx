@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {  getAllTemperaments,getDogs } from '../redux/actions/index';
+import { getAllTemperaments, getDogs } from '../redux/actions/index';
+import './CSScomponents/Detail.css'
 
 const Detail = () => {
     const { id } = useParams();

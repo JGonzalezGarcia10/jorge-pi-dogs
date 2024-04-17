@@ -12,7 +12,6 @@ function App() {
   const navigate = useNavigate();
 
 
-
   return (
     <div className="App">
       <Routes>

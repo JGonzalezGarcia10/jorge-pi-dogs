@@ -32,10 +32,10 @@ export default function SearchBar(props) {
         <button className="sbbot" onClick={handleSubmit} type="submit">
           Buscar
         </button>
-        
-        <Link to = {"/form"}>
-              <button>Create dog</button>
-            </Link>
+
+        <Link to={"/form"}>
+          <button className="sbbot">Create dog</button>
+        </Link>
       </div>
     </div>
   );

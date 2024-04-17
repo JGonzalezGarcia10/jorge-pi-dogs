@@ -1,18 +1,46 @@
+
+
 .dog-detail {
-    display: flex;
-    flex-direction: column; /* Alinea los elementos verticalmente */
-    justify-content: center; /* Centra verticalmente el contenido */
-    align-items: center; /* Centra horizontalmente el contenido */
-    height: 100vh; /* Ocupa toda la altura de la pantalla */
-  }
-  
-  .dog-detail img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-  
-  .dog-detail button {
-    margin-top: 20px; /* Espacio superior para separar el botón de la imagen */
-  }
+  max-width: 600px; /* Ancho máximo del detalle */
+  margin: 0 auto; /* Centrar el detalle horizontalmente */
+  padding: 20px;
+  background-color: #d7e2f1;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 40px;
+}
+
+
+
+
+.dog-detail h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.dog-detail img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.dog-detail p {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.dog-detail button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dog-detail button:hover {
+  background-color: #0056b3;
+}
